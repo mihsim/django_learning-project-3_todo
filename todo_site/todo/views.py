@@ -14,7 +14,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 
 from django.utils import timezone
-
+from django.contrib.auth.decorators import login_required
 
 from .forms import TodoForm
 from .models import Todo
@@ -61,17 +61,26 @@ def loginuser(request):
         return redirect('current_todos')
 
 
+@login_required
 def logoutuser(request):
     if request.method == "POST":
         logout(request)
         return redirect('home')
 
 
+@login_required
 def current_todos(request):
     todos = Todo.objects.filter(user=request.user, completed_time__isnull=True)
     return render(request, "todo/current_todos.html", {'todos': todos})
 
 
+@login_required
+def completed(request):
+    todos = Todo.objects.filter(user=request.user, completed_time__isnull=False).order_by('-completed_time')
+    return render(request, "todo/completed.html", {"todos": todos})
+
+
+@login_required
 def create_todo(request):
     if request.method == "GET":
         return render(request, "todo/create_todo.html", {'form': TodoForm})
@@ -90,6 +99,7 @@ def create_todo(request):
             return render(request, "todo/create_todo.html", {'form': TodoForm, "error": "Bad data provided by user. Try harder!"})
 
 
+@login_required
 def view_todo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == "GET":
@@ -104,6 +114,7 @@ def view_todo(request, todo_pk):
             return render(request, "todo/view_todo.html", {'todo': todo, 'form': form, 'error': "Bad data, please try harder."})
 
 
+@login_required
 def complete_todo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == "POST":
@@ -112,6 +123,7 @@ def complete_todo(request, todo_pk):
         return redirect("current_todos")
 
 
+@login_required
 def delete_todo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == "POST":

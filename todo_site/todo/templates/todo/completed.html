@@ -1,7 +1,7 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-<h1>Ongoing tasks to do</h1>
+<h1>Completed</h1>
 <ul>
     {% for todo in todos %}
         <li>
@@ -12,6 +12,7 @@
                 {% if todo.memo %}
                     - {{ todo.memo }}
                 {% endif %}
+                {{todo.completed_time|date:'H:m d.m.Y'}}
             </a>
         </li>
     {% endfor %}
