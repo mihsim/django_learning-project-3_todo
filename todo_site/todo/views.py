@@ -15,6 +15,7 @@ from django.contrib.auth import login, logout, authenticate
 
 
 from .forms import TodoForm
+from .models import Todo
 
 
 def home(request):
@@ -65,7 +66,8 @@ def logoutuser(request):
 
 
 def current_todos(request):
-    return render(request, "todo/current_todos.html")
+    todos = Todo.objects.filter(user=request.user, completed_time__isnull=True)
+    return render(request, "todo/current_todos.html", {'todos': todos})
 
 
 def create_todo(request):
@@ -85,3 +87,6 @@ def create_todo(request):
         except ValueError:
             return render(request, "todo/create_todo.html", {'form': TodoForm, "error": "Bad data provided by user. Try harder!"})
 
+
+def view_todo(request, todo_pk):
+    pass
