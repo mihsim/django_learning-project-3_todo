@@ -1,15 +1,18 @@
 {% extends 'todo/base.html' %}
+
 {% block content %}
 <h1>bazzinga</h1>
 <ul>
     {% for todo in todos %}
         <li>
-            {% if todo.important %}<b>{% endif %}
-            {{todo.title}}
-            {% if todo.important %}</b>{% endif %}
-            {% if todo.memo %}
-                - {{ todo.memo }}
-            {% endif %}
+            <a href="{% url 'view_todo' todo.id %}">
+                {% if todo.important %}<b>{% endif %}
+                {{todo.title}}
+                {% if todo.important %}</b>{% endif %}
+                {% if todo.memo %}
+                    - {{ todo.memo }}
+                {% endif %}
+            </a>
         </li>
     {% endfor %}
 </ul>

@@ -1,5 +1,5 @@
 # redirect is used after new user has been created and logged in to direct him to new page
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Form by django to put in username and password
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -12,6 +12,8 @@ from django.db import IntegrityError
 
 # To automatically log in after user has been created
 from django.contrib.auth import login, logout, authenticate
+
+from django.utils import timezone
 
 
 from .forms import TodoForm
@@ -89,4 +91,29 @@ def create_todo(request):
 
 
 def view_todo(request, todo_pk):
-    pass
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == "GET":
+        form = TodoForm(instance=todo)
+        return render(request, "todo/view_todo.html", {'todo': todo, 'form': form})
+    else:
+        try:
+            form = TodoForm(request.POST, instance=todo)
+            form.save()
+            return redirect("current_todos")
+        except ValueError:
+            return render(request, "todo/view_todo.html", {'todo': todo, 'form': form, 'error': "Bad data, please try harder."})
+
+
+def complete_todo(request, todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == "POST":
+        todo.completed_time = timezone.now()
+        todo.save()
+        return redirect("current_todos")
+
+
+def delete_todo(request, todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == "POST":
+        todo.delete()
+        return redirect("current_todos")
