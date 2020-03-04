@@ -14,6 +14,9 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 
 
+from .forms import TodoForm
+
+
 def home(request):
     return render(request, 'todo/home.html')
 
@@ -32,7 +35,7 @@ def signupuser(request):
                 # Log this user in
                 login(request, user)
                 # Send him to next page
-                return redirect('currenttodos')
+                return redirect('current_todos')
             except IntegrityError:
                 return render(request, "todo/signupuser.html", {'form': UserCreationForm(),
                                                                 'error': "This username has already been taken. Please select another."})
@@ -52,7 +55,8 @@ def loginuser(request):
         if user is None:
             return render(request, "todo/loginuser.html", {'form': AuthenticationForm(), 'error': 'Username and password did not match.'})
         login(request, user)
-        return redirect('currenttodos')
+        return redirect('current_todos')
+
 
 def logoutuser(request):
     if request.method == "POST":
@@ -60,5 +64,24 @@ def logoutuser(request):
         return redirect('home')
 
 
-def currenttodos(request):
-    return render(request, "todo/currenttodos.html")
+def current_todos(request):
+    return render(request, "todo/current_todos.html")
+
+
+def create_todo(request):
+    if request.method == "GET":
+        return render(request, "todo/create_todo.html", {'form': TodoForm})
+    else:
+        try:
+            # request.method == "POST"
+            form = TodoForm(request.POST)
+            # Form is missing user info so we can not save it to database yet (commit=False)
+            # Rather we create a form object and save it to 'new_form'
+            new_todo = form.save(commit=False)
+            new_todo.user = request.user
+            # Now save it to db.
+            new_todo.save()
+            return redirect('current_todos')
+        except ValueError:
+            return render(request, "todo/create_todo.html", {'form': TodoForm, "error": "Bad data provided by user. Try harder!"})
+
