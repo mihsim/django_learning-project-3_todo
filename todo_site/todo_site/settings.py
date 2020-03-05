@@ -25,7 +25,7 @@ SECRET_KEY = '1^gc273vxi0dp-aquc_@lu3k+wksg*+smb2qxq=+*pv$kp023@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://mihsim.pythonanywhere.com/"]
+ALLOWED_HOSTS = ["mihsim.pythonanywhere.com/"]
 
 
 # Application definition
