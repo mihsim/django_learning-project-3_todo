@@ -125,6 +125,6 @@ LOGIN_URL = '/login/'
 
 
 try:
-    import local_settings
+    from .local_settings import *
 except ImportError:
     pass
