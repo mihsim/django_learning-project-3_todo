@@ -1,7 +1,10 @@
 {% extends 'todo/base.html' %}
 
+{% block title %}
+    Sign up
+{% endblock %}
+
 {% block content %}
-    <h1>Sing up</h1>
     <h2>{{error}}</h2>
     <form method="POST">
         {% csrf_token %}

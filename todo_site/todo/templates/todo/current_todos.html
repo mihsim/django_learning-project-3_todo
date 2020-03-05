@@ -1,19 +1,27 @@
 {% extends 'todo/base.html' %}
 
+{% block title %}
+    Active tasks
+{% endblock %}
+
+
 {% block content %}
-<h1>Ongoing tasks to do</h1>
-<ul>
-    {% for todo in todos %}
-        <li>
-            <a href="{% url 'view_todo' todo.id %}">
-                {% if todo.important %}<b>{% endif %}
-                {{todo.title}}
-                {% if todo.important %}</b>{% endif %}
-                {% if todo.memo %}
-                    - {{ todo.memo }}
-                {% endif %}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
+    <ul class="list-group">
+        {% for todo in todos %}
+            {% if todo.important %}
+                <li class="list-group-item list-group-item-danger">
+            {% else %}
+                <li class="list-group-item">
+            {% endif %}
+                <a href="{% url 'view_todo' todo.id %}">
+                    {% if todo.important %}<b>{% endif %}
+                    {{todo.title}}
+                    {% if todo.important %}</b>{% endif %}
+                    {% if todo.memo %}
+                        - {{ todo.memo }}
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
