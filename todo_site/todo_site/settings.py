@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1^gc273vxi0dp-aquc_@lu3k+wksg*+smb2qxq=+*pv$kp023@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://mihsim.pythonanywhere.com/"]
 
 
 # Application definition
@@ -122,3 +122,9 @@ STATIC_URL = '/static/'
 
 # User will be redirected to this url if he/she is not logged in but tries to access a view with @login_required
 LOGIN_URL = '/login/'
+
+
+try:
+    import local_settings
+except ImportError:
+    pass
